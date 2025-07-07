@@ -3,13 +3,18 @@ package com.example.service;
 import com.example.exception.NotaInvalidaException;
 import com.example.model.Calificacion;
 import com.example.model.Estudiante;
+import com.example.model.Materia;
 
 public class RegistroCalificacionService {
-    public void registrarCalificacion(Estudiante estudiante, Calificacion calificacion) throws NotaInvalidaException {
-        if (calificacion.getNota() < 0 || calificacion.getNota() > 20) {
-            throw new NotaInvalidaException("La nota debe estar entre 0 y 20.");
+    public void registrarNota(Estudiante est, Materia mat, double nota) throws NotaInvalidaException {
+        if (nota < 0 || nota > 20) {
+            throw new NotaInvalidaException("Nota fuera de rango permitido (0-20).");
         }
 
-        estudiante.agregarCalificacion(calificacion);
+        Calificacion c = new Calificacion(mat, nota);
+        est.agregarCalificacion(c);
     }
+    // TODO
+    /*public Estudiante buscarEstudiantePorNombre(Materia m, String nombre){
+    }*/
 }

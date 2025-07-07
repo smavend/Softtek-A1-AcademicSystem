@@ -1,23 +1,27 @@
 package com.example.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
-public class Estudiante {
-    private String id;
-    private String nombre;
+@Getter
+@Setter
+public class Estudiante extends Persona{
     private List<Calificacion> calificaciones;
 
     public Estudiante(String id, String nombre) {
-        this.id = id;
-        this.nombre = nombre;
+        super(id, nombre);
         this.calificaciones = new ArrayList<>();
     }
 
     public void agregarCalificacion(Calificacion c) {
         calificaciones.add(c);
+    }
+
+    @Override
+    public String getTipo() {
+        return "Estudiante";
     }
 }
