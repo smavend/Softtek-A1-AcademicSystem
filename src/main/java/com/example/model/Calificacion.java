@@ -6,11 +6,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Calificacion {
-    private Materia materia;
+    private Examen examen;
     private double nota;
 
-    public Calificacion(Materia materia, double nota) {
-        this.materia = materia;
+    public Calificacion(Examen examen, double nota) {
+        this.examen = examen;
         this.nota = nota;
     }
 }

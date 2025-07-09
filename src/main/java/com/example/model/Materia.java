@@ -14,7 +14,6 @@ public class Materia {
     private String nombre;
     private Profesor profesor;
     private Aula aula;
-    private List<Estudiante> inscritos;
 
     private final int MAX_ESTUDIANTES = 30;
 
@@ -23,13 +22,6 @@ public class Materia {
         this.nombre = nombre;
         this.profesor = profesor;
         this.aula = aula;
-        this.inscritos = new ArrayList<>();
     }
 
-    public void inscribirEstudiante(Estudiante e) throws CupoExcedidoException {
-        if (inscritos.size() >= MAX_ESTUDIANTES) {
-            throw new CupoExcedidoException("La materia ha alcanzado su cupo máximo.");
-        }
-        inscritos.add(e);
-    }
 }
