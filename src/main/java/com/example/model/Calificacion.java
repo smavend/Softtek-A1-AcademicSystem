@@ -13,4 +13,13 @@ public class Calificacion {
         this.examen = examen;
         this.nota = nota;
     }
+
+    @Override // <--- ¡Importante: esta anotación indica que sobrescribes un método!
+    public String toString() {
+        // Formatear la salida para que sea legible
+        return "Calificación [Examen ID: " + examen.getId() +
+                ", Materia: " + examen.getMateria().getNombre() +
+                " - Fecha: " + examen.getFecha() +
+                ", Nota: " + nota + "]";
+    }
 }
