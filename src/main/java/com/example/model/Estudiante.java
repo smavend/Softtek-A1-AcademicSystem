@@ -9,19 +9,28 @@ import java.util.List;
 @Getter
 @Setter
 public class Estudiante extends Persona{
-    private List<Calificacion> calificaciones;
+    private List<Materia> materias;
 
-    public Estudiante(String id, String nombre) {
-        super(id, nombre);
-        this.calificaciones = new ArrayList<>();
+    public Estudiante() {
+        super();
+        this.materias = new ArrayList<>();
     }
 
-    public void agregarCalificacion(Calificacion c) {
-        calificaciones.add(c);
+    public Estudiante(String id, String nombre) {
+        super();
+        this.materias = new ArrayList<>();
     }
 
     @Override
     public String getTipo() {
         return "Estudiante";
+    }
+
+    public void inscribirMateria(Materia materia) {
+        materias.add(materia);
+    }
+
+    public List<Materia> getMateriasInscritas() {
+        return materias;
     }
 }
