@@ -13,6 +13,7 @@ import com.example.repository.ICalificacionRepository;
 import com.example.service.RegistroCalificacionService;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Scanner;
 
@@ -20,20 +21,27 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("--- ¡Bienvenido a Gestión Académica Simplificada! ---");
 
-        // 1. Inicialización del Repositorio y Servicio
+
         ICalificacionRepository repoCalificacion = new ArrayCalificacionRepository();
         RegistroCalificacionService registroService = new RegistroCalificacionService(repoCalificacion);
 
-        // 2. Datos de Prueba Fijos (para probar el sistema sin pedir mucha entrada)
+
         Profesor profMate = new Profesor("P101", "Julia Mendoza", "Matemáticas");
         Aula aula301 = new Aula("A301", 30);
         Materia mateAvanzada = new Materia("M201", "Matemáticas Avanzadas", profMate, aula301);
         Estudiante estPrincipal = new Estudiante("1","Luis Gonzales");
 
+
+
         // Exámenes de prueba con IDs predefinidos
-        Examen examenParcial = new Examen(1, mateAvanzada, LocalDate.parse("2025-06-15"));
-        Examen examenFinal = new Examen(2, mateAvanzada, LocalDate.parse("2025-07-20"));
-        Examen examenRecuperacion = new Examen(3, mateAvanzada, LocalDate.parse("2025-08-05"));
+        Examen examenParcial = new Examen("1", "Parcial Matemática Avanzada", 20.0, mateAvanzada, LocalDate.parse("2025-06-15").atStartOfDay(), "Primer examen parcial");
+        Examen examenFinal = new Examen("2", "Final Matemática Avanzada", 20.0, mateAvanzada, LocalDate.parse("2025-07-20").atStartOfDay(), "Examen final del curso");
+        Examen examenRecuperacion = new Examen("3", "Recuperación Matemática Avanzada", 20.0, mateAvanzada, LocalDate.parse("2025-08-05").atStartOfDay(), "Examen de recuperación");
+
+
+        //Examen examenParcial = new Examen(1, mateAvanzada, LocalDate.parse("2025-06-15"));
+        //Examen examenFinal = new Examen(2, mateAvanzada, LocalDate.parse("2025-07-20"));
+        //Examen examenRecuperacion = new Examen(3, mateAvanzada, LocalDate.parse("2025-08-05"));
 
 
         Scanner scanner = new Scanner(System.in);
@@ -54,7 +62,7 @@ public class Main {
                     case 1:
                         System.out.println("\n--- Registrando Calificaciones de Prueba ---");
                         // Intenta registrar una nota para el Examen 1
-                        System.out.print("Ingrese la nota para el Examen Parcial (ID: " + examenParcial.getId() + ") de " + estPrincipal.getNombre() + ": ");
+                        System.out.print("Ingrese la nota para el Examen Parcial (ID: "  + examenParcial.getId() + ") de " + estPrincipal.getNombre() + ": ");
                         try {
                             double notaParcial = Double.parseDouble(scanner.nextLine());
                             registroService.registrarNota(estPrincipal, examenParcial, notaParcial);
@@ -94,8 +102,9 @@ public class Main {
                     case 3:
                         System.out.println("\n--- Eliminar Calificación ---");
                         System.out.print("Ingrese el ID del Examen (ej. 1, 2, 3) asociado a la calificación a eliminar: ");
+
                         int idExamenAEliminar = Integer.parseInt(scanner.nextLine());
-                        repoCalificacion.removeCalificacion(idExamenAEliminar);
+                        repoCalificacion.removeCalificacion(String.valueOf(idExamenAEliminar));
                         // El mensaje de éxito/fracaso ahora lo gestiona tu implementación del repositorio
                         break;
                     case 0:

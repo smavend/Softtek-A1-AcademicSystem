@@ -9,7 +9,7 @@ public interface ICalificacionRepository {
 
     //Acciones por alumno
     void addCalificacion(Calificacion calificacion);
-    void removeCalificacion(int id);
+    void removeCalificacion(String id);
     //Calificacion findCalificacion(Calificacion calificacion);
     List<Calificacion> showAllCalificacion();
 

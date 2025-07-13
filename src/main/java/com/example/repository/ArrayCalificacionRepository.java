@@ -28,12 +28,12 @@ public class ArrayCalificacionRepository implements ICalificacionRepository{
     }
 
     @Override
-    public void removeCalificacion(int id) {
+    public void removeCalificacion(String id) {
         int index = -1;
 
         //buscar la calificacion por el id
         for (int i = 0; i<count;i++){
-            if(calificaciones[i].getExamen().getId() == id){
+            if(calificaciones[i].getExamen().getId().equals(String.valueOf(id))){
                 index = i;
                 break;
             }

@@ -6,11 +6,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Aula {
-    private String codigo;
+    private String id;
     private int capacidad;
 
-    public Aula(String codigo, int capacidad) {
-        this.codigo = codigo;
+    public Aula(String id, int capacidad) {
+        this.id = id;
         this.capacidad = capacidad;
     }
 }
