@@ -16,6 +16,7 @@ public class Materia {
     private Profesor profesor;
     private Aula aula;
     private Estudiante[] estudiantes;
+    private Examen[] examenes = new Examen[10];
     private int cupoMaximo;
 
     public Materia(String codigo, String nombre, Profesor profesor, Aula aula) {
