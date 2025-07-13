@@ -12,7 +12,7 @@ public class Examen extends Evaluacion{
     private String descripcion;
 
     public Examen(String id, String nombre, double notaMax,  Materia materia, LocalDateTime fecha, String descripcion) {
-        super();
+        super(id, nombre, notaMax, materia, fecha);
         this.descripcion = descripcion;
     }
 

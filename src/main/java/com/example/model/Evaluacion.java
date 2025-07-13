@@ -16,6 +16,13 @@ public abstract class Evaluacion {
 
     // Constructor por defecto para lombok
     public Evaluacion() {}
+    public Evaluacion(String id, String nombre, double notaMax, Materia materia, LocalDateTime fecha) {
+        this.id = id;
+        this.nombre = nombre;
+        this.notaMax = notaMax;
+        this.materia = materia;
+        this.fecha = fecha;
+    }
 
     public abstract String getTipo();
 }

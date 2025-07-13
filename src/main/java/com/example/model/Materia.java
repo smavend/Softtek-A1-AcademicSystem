@@ -39,4 +39,29 @@ public class Materia {
         this.cupoMaximo = aula.getCapacidad();
         this.estudiantes = new Estudiante[cupoMaximo];
     }
+
+    public boolean agregarEstudiante(Estudiante estudiante) {
+        if (estudiantes == null) {
+            estudiantes = new Estudiante[aula.getCapacidad()];
+        }
+
+        // Verificar si ya está inscrito
+        for (Estudiante e : estudiantes) {
+            if (e != null && e.getId() !=null) {
+                if (e.getId().equals(estudiante.getId())){
+                    return false;
+                }
+            }
+        }
+
+        // Agregar si hay espacio
+        for (int i = 0; i < estudiantes.length; i++) {
+            if (estudiantes[i] == null) {
+                estudiantes[i] = estudiante;
+                return true;
+            }
+        }
+
+        return false; // No hay espacio
+    }
 }
