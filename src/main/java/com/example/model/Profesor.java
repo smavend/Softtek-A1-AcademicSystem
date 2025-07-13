@@ -6,17 +6,15 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Profesor extends Persona{
-    private Materia materiasAsignada;
+    private String especialidad;
 
-    public Profesor(String id, String nombre) {
+    public Profesor(String id, String nombre, String especialidad) {
         super(id, nombre);
+        this.especialidad = especialidad;
     }
 
-    public void asignarMateria(Materia materia) {
-        this.materiasAsignada = materia;
-    }
-    public Materia getMateriaAsignada() {
-        return materiasAsignada;
+    public void getEspecialidad() {
+        System.out.println("Especialidad: " + especialidad);
     }
 
     @Override

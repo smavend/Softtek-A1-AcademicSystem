@@ -43,35 +43,4 @@ public class ProfesorRepoMem implements IProfesorRepo {
         throw new IllegalArgumentException("Profesor con ID " + id + " no encontrado.");
     }
 
-    @Override
-    public void asignMateria(String idProfesor, Materia materia) {
-        //Asignar una materia a un profesor sabiensdo que cuando el profesor se crea tiene su materia en null
-        if (materia == null) {
-            throw new IllegalArgumentException("La materia no puede ser nula.");
-        }
-        Profesor profesor = findProfesor(idProfesor);
-        if (profesor != null) {
-            profesor.asignarMateria(materia);
-        } else {
-            throw new IllegalArgumentException("Profesor con ID " + idProfesor + " no encontrado.");
-        }
-    }
-
-    @Override
-    public void verMaterias(String idProfesor) {
-        Profesor profesor = findProfesor(idProfesor);
-        //Ver las materia asignada a un profesor
-        if (profesor != null) {
-            Materia materia = profesor.getMateriaAsignada();
-            if (materia != null) {
-                System.out.println("Materia asignada a " + profesor.getNombre() + ": " + materia.getNombre());
-            } else {
-                System.out.println("El profesor " + profesor.getNombre() + " no tiene materia asignada.");
-            }
-        } else {
-            throw new IllegalArgumentException("Profesor con ID " + idProfesor + " no encontrado.");
-        }
-
-
-    }
 }
