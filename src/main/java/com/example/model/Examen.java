@@ -1,9 +1,7 @@
 package com.example.model;
-
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -19,5 +17,6 @@ public class Examen extends Evaluacion{
     @Override
     public String getTipo() {
         return "Examen";
+
     }
 }
