@@ -13,6 +13,10 @@ public class Profesor extends Persona{
         this.especialidad = especialidad;
     }
 
+    public void getEspecialidad() {
+        System.out.println("Especialidad: " + especialidad);
+    }
+
     @Override
     public String getTipo() {
         return "Profesor";
