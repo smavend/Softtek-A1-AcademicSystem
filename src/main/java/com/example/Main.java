@@ -1,15 +1,16 @@
 package com.example;
 
 import com.example.exception.CupoExcedidoException;
+import com.example.exception.EstudianteNoEncontrado;
 import com.example.exception.NotaInvalidaException;
+import com.example.interfaces.IEstudianteRepo;
+import com.example.interfaces.IProfesorRepo;
 import com.example.model.*;
 import com.example.repository.ArrayCalificacionRepository;
 import com.example.repository.ArrayExamRepository;
 import com.example.repository.ExamRepository;
 import com.example.repository.ICalificacionRepository;
-import com.example.service.ExamCrudService;
-import com.example.service.ExamService;
-import com.example.service.RegistroCalificacionService;
+import com.example.service.*;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -22,13 +23,29 @@ public class Main {
         ICalificacionRepository repoCalificacion = new ArrayCalificacionRepository();
         RegistroCalificacionService registroService = new RegistroCalificacionService(repoCalificacion);
 
+
+        // Repositorio de exámenes y servicio
+        ExamRepository examenRepo = new ArrayExamRepository();
+        ExamService examenService = new ExamCrudService(examenRepo);
+
+        IProfesorRepo profesorRepo = new ProfesorRepoMem();
+        IEstudianteRepo estudianteRepo = new EstudianteRepoMem();
+
+        Director director = new Director("D1", "María Torres", "Director Académico");
+
         // Datos de prueba: Profesores
         Profesor prof1 = new Profesor("P1", "Juan Pérez", "Matemática");
         Profesor prof2 = new Profesor("P2", "Laura García", "Física");
 
+        profesorRepo.addProfesor(prof1);
+        profesorRepo.addProfesor(prof2);
+
         // Datos de prueba: Estudiantes
         Estudiante est1 = new Estudiante("E1", "Ana López");
         Estudiante est2 = new Estudiante("E2", "Carlos Ruiz");
+
+        estudianteRepo.addEstudiante(est1);
+        estudianteRepo.addEstudiante(est2);
 
         // Datos de prueba: Aulas y materias
         Aula aula1 = new Aula("A101", 30);
@@ -44,9 +61,6 @@ public class Main {
         mat2.agregarEstudiante(est2);
         mat3.agregarEstudiante(est1);
 
-        // Repositorio de exámenes y servicio
-        ExamRepository examenRepo = new ArrayExamRepository();
-        ExamService examenService = new ExamCrudService(examenRepo);
 
         // Exámenes creados
         Examen ex1 = new Examen("EX1", "Examen Parcial Álgebra", 20.0, mat1, LocalDateTime.of(2025, 5, 1, 10, 0), "Parcial");
@@ -73,17 +87,18 @@ public class Main {
         repoCalificacion.addCalificacion(new Calificacion(est2, ex3, 14.0));
 
         // Datos para navegación
-        List<Profesor> profesores = List.of(prof1, prof2);
-        List<Estudiante> estudiantes = List.of(est1, est2);
+        List<Director> directores = List.of(director);
         List<Materia> materias = List.of(mat1, mat2, mat3);
         List<Examen> examenes = Arrays.asList(ex1, ex2, ex3);
 
         Map<String, Profesor> mapaProfesores = new HashMap<>();
-        for (Profesor p : profesores) mapaProfesores.put(p.getId(), p);
+        for (Profesor p : profesorRepo.findAllProfesores()) mapaProfesores.put(p.getId(), p);
 
         Map<String, Estudiante> mapaEstudiantes = new HashMap<>();
-        for (Estudiante e : estudiantes) mapaEstudiantes.put(e.getId(), e);
+        for (Estudiante e : estudianteRepo.verEstudiantes()) mapaEstudiantes.put(e.getId(), e);
 
+        Map<String, Director> mapaDirectores = new HashMap<>();
+        for (Director d : directores) mapaDirectores.put(d.getId(), d);
         // Menú principal
         while (true) {
             System.out.println("\n===== SISTEMA ACADÉMICO =====");
@@ -94,12 +109,92 @@ public class Main {
                 profesorMenu(mapaProfesores.get(id), materias, examenService, repoCalificacion, registroService);
             } else if (mapaEstudiantes.containsKey(id)) {
                 estudianteMenu(mapaEstudiantes.get(id), materias, examenes, examenService, repoCalificacion);
+            } else if (mapaDirectores.containsKey(id)) {
+                directorMenu(mapaDirectores.get(id), materias, profesorRepo, estudianteRepo);
             } else {
                 System.out.println("⚠️ ID no reconocido.");
             }
         }
 
         System.out.println("Sesión finalizada.");
+    }
+
+    private static void directorMenu(Director director, List<Materia> materias, IProfesorRepo profesorRepo, IEstudianteRepo estudianteRepo) {
+        while (true) {
+            System.out.println("\n--- Menú Director (" + director.getNombre() + ") ---");
+            System.out.println("1. Ver estudiantes");
+            System.out.println("2. Agregar estudiante");
+            System.out.println("3. Eliminar estudiante");
+            System.out.println("4. Ver profesores");
+            System.out.println("5. Agregar profesor");
+            System.out.println("6. Eliminar profesor");
+            System.out.println("0. Cerrar sesión");
+
+            int opcion = leerEntero("Seleccione una opción:");
+            switch (opcion) {
+
+                case 0 -> System.out.println("Volviendo al menú anterior...");
+                case 1 -> {
+                    System.out.println("\n--- Lista de Estudiantes ---");
+                    for (Estudiante est : estudianteRepo.verEstudiantes()) {
+                        System.out.println("• " + est.getId() + ": " + est.getNombre());
+                    }
+                    if (estudianteRepo.verEstudiantes().isEmpty()) {
+                        System.out.println("No hay estudiantes registrados.");
+                    }
+                }
+                case 2 -> {
+                    String id = leerCadena("ID del nuevo estudiante:");
+                    String nombre = leerCadena("Nombre del nuevo estudiante:");
+                    Estudiante nuevoEstudiante = new Estudiante(id, nombre);
+                    for (Materia m : materias) {
+                        m.agregarEstudiante(nuevoEstudiante);
+                    }
+                    System.out.println("✅ Estudiante agregado: " + nuevoEstudiante.getNombre());
+                }
+                case 3 -> {
+                    String id = leerCadena("ID del estudiante a eliminar:");
+                    Estudiante est = materias.stream()
+                            .flatMap(m -> Arrays.stream(m.getEstudiantes()))
+                            .filter(e -> e != null && e.getId().equals(id))
+                            .findFirst()
+                            .orElseThrow(() -> new EstudianteNoEncontrado("EstudianteNoEncontradoException: El estudiante con ID " + id + " no fue encontrado."));
+                    if (est != null) {
+                        for (Estudiante e : estudianteRepo.verEstudiantes()) {
+                            estudianteRepo.removeEstudiante(e.getId());
+                        }
+                        System.out.println("✅ Estudiante eliminado: " + est.getNombre());
+                    } else {
+                        System.out.println("⚠️ Estudiante no encontrado.");
+                    }
+                }
+                case 4 -> {
+                    System.out.println("\n--- Lista de Profesores ---");
+                    for (Materia materia : materias) {
+                        if (materia.getProfesor() == null) continue;
+                        System.out.println("• " + materia.getProfesor().getId() + ": " + materia.getProfesor().getNombre() + " - Materia: " + materia.getNombre());
+                    }
+                }
+                case 5 -> {
+                    String id = leerCadena("ID del nuevo profesor:");
+                    String nombre = leerCadena("Nombre del nuevo profesor:");
+                    String materia = leerCadena("Materia que enseña:");
+                    Profesor nuevoProfesor = new Profesor(id, nombre, materia);
+                    profesorRepo.addProfesor(nuevoProfesor);
+                    System.out.println("✅ Profesor agregado: " + nuevoProfesor.getNombre());
+                }
+                case 6 -> {
+                    String id = leerCadena("ID del profesor a eliminar:");
+                    try {
+                        profesorRepo.removeProfesor(id, materias);
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("⚠️ " + e.getMessage());
+                    }
+                    System.out.println("✅ Profesor eliminado.");
+                }
+                default -> System.out.println("⚠️ Opción inválida.");
+            }
+        }
     }
 
     // Menú para profesores

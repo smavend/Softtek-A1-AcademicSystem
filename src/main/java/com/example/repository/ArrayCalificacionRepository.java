@@ -77,4 +77,22 @@ public class ArrayCalificacionRepository implements ICalificacionRepository{
         return calificacionesPorMateria; //retorna la lista filtrada
     }
 
+    @Override
+    public boolean deleteCalificationByEstudiante(String estudianteId, String materiaId) {
+        boolean found = false;
+
+        //Recorrer el array de calificaciones
+        for (int i = 0; i < count; i++) {
+            //Verificar si la calificación pertenece al estudiante y materia especificados
+            if (calificaciones[i].getEstudiante().getId().equals(estudianteId) &&
+                calificaciones[i].getExamen().getMateria().getCodigo().equals(materiaId)) {
+                removeCalificacion(calificaciones[i].getExamen().getId());
+                found = true;
+                break; // Salir del bucle una vez que se ha eliminado la calificación
+            }
+        }
+
+        return found; //retorna true si se encontró y eliminó la calificación, false en caso contrario
+    }
+
 }

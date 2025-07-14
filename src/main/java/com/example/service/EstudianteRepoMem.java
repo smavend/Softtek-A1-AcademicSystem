@@ -1,8 +1,13 @@
 package com.example.service;
 
+import com.example.exception.EstudianteNoEncontrado;
 import com.example.interfaces.IEstudianteRepo;
+import com.example.model.Calificacion;
 import com.example.model.Estudiante;
+import com.example.model.Examen;
 import com.example.model.Materia;
+import com.example.repository.ArrayCalificacionRepository;
+import com.example.repository.ICalificacionRepository;
 
 import java.util.List;
 
@@ -25,8 +30,13 @@ public class EstudianteRepoMem implements IEstudianteRepo {
     }
     @Override
     public void removeEstudiante(String id){
+        ICalificacionRepository califRepo = new ArrayCalificacionRepository();
         Estudiante encontrar = findEstudiante(id);
         if (encontrar != null) {
+            for (Materia materia : encontrar.getMateriasInscritas()) {
+                materia.removerEstudiante(encontrar);
+                califRepo.deleteCalificationByEstudiante(materia.getCodigo(), encontrar.getId());
+            }
             estudiantes.remove(encontrar);
         }
         else {
@@ -35,13 +45,13 @@ public class EstudianteRepoMem implements IEstudianteRepo {
     }
 
     @Override
-    public Estudiante findEstudiante(String id) {
+    public Estudiante findEstudiante(String id) throws EstudianteNoEncontrado {
         for (Estudiante estudiante : estudiantes) {
             if (estudiante.getId().equals(id)) {
                 return estudiante;
             }
         }
-        throw new IllegalArgumentException("Estudiante con ID " + id + " no encontrado.");
+        throw new EstudianteNoEncontrado("Estudiante con ID " + id + " no encontrado.");
     }
 
     @Override
@@ -73,5 +83,10 @@ public class EstudianteRepoMem implements IEstudianteRepo {
         } else {
             throw new IllegalArgumentException("Estudiante con ID " + idEstudiante + " no encontrado.");
         }
+    }
+
+    @Override
+    public List<Estudiante> verEstudiantes() {
+        return estudiantes;
     }
 }

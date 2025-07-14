@@ -13,4 +13,5 @@ public interface ICalificacionRepository {
     //Calificacion findCalificacion(Calificacion calificacion);
     List<Calificacion> showAllCalificacion();
     List<Calificacion> getCalificacionByMateria(String materiaId);
+    boolean deleteCalificationByEstudiante(String estudianteId, String materiaId);
 }

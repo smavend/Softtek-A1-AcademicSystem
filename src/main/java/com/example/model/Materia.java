@@ -64,4 +64,15 @@ public class Materia {
 
         return false; // No hay espacio
     }
+
+    //remover estudiante
+    public boolean removerEstudiante(Estudiante estudiante) {
+        for (int i = 0; i < estudiantes.length; i++) {
+            if (estudiantes[i] != null && estudiantes[i].getId().equals(estudiante.getId())) {
+                estudiantes[i] = null; // Eliminar al estudiante
+                return true;
+            }
+        }
+        return false; // Estudiante no encontrado
+    }
 }
